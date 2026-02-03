@@ -1,90 +1,170 @@
+// ignore_for_file: unnecessary_underscores
+
 import 'package:flutter/material.dart';
 import '../models/article_model.dart';
 
 class ArticleDetailView extends StatelessWidget {
   final Article article;
 
-  // Kita mewajibkan pengiriman data 'article' saat halaman ini dipanggil
   const ArticleDetailView({super.key, required this.article});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('News Content'),
-        backgroundColor: const Color.fromARGB(255, 0, 17, 255),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 1. Gambar Utama
-            if (article.urlToImage != null)
-              Image.network(
-                article.urlToImage!,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
-                    const SizedBox(height: 200, child: Icon(Icons.broken_image)),
-              ),
-
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      backgroundColor: Colors.white,
+      body: CustomScrollView(
+        slivers: [
+          // --- 1. Dynamic Header (SliverAppBar) ---
+          SliverAppBar(
+            expandedHeight: 350, // Tinggi header saat ditarik
+            pinned: true, // AppBar tetap terlihat saat di-scroll
+            backgroundColor: const Color(0xFF0D47A1),
+            iconTheme: const IconThemeData(color: Colors.white),
+            flexibleSpace: FlexibleSpaceBar(
+              background: Stack(
+                fit: StackFit.expand,
                 children: [
-                  // 2. Judul Berita
-                  Text(
-                    article.title ?? 'Tanpa Judul',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-
-                  // 3. Penulis & Tanggal
-                  Row(
-                    children: [
-                      const Icon(Icons.person, size: 16, color: Colors.grey),
-                      const SizedBox(width: 4),
-                      Expanded(
-                        child: Text(
-                          article.author ?? 'Penulis Tidak Diketahui',
-                          style: const TextStyle(color: Colors.grey),
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                  // Gambar Background
+                  article.urlToImage != null
+                      ? Image.network(
+                          article.urlToImage!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(color: Colors.grey),
+                        )
+                      : Container(color: const Color(0xFF0D47A1)),
+                  
+                  // Gradient Overlay (Agar icon back terlihat jelas)
+                  const DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black45,
+                          Colors.transparent,
+                          Colors.transparent,
+                          Colors.black54,
+                        ],
+                        stops: [0.0, 0.3, 0.7, 1.0],
                       ),
-                      Text(
-                        // Mengambil 10 karakter pertama saja (YYYY-MM-DD)
-                        article.publishedAt != null && article.publishedAt!.length >= 10
-                            ? article.publishedAt!.substring(0, 10)
-                            : '',
-                        style: const TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                  const Divider(height: 30),
-
-                  // 4. Deskripsi & Konten
-                  Text(
-                    article.description ?? '',
-                    style: const TextStyle(
-                      fontSize: 16, 
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
                     ),
-                  ),
-                  const SizedBox(height: 15),
-                  Text(
-                    article.content ?? 'Tidak ada konten tambahan.',
-                    style: const TextStyle(fontSize: 16, height: 1.5),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+
+          // --- 2. Konten Berita ---
+          SliverToBoxAdapter(
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Label Kategori
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE3F2FD),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      "TECHNOLOGY",
+                      style: TextStyle(
+                        color: Colors.blue[900],
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Judul Besar
+                  Text(
+                    article.title ?? 'No Title',
+                    style: const TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF1A1A1A),
+                      height: 1.3,
+                      fontFamily: 'Roboto', // Pastikan font mendukung
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Info Penulis & Tanggal
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.blue[50],
+                        radius: 20,
+                        child: const Icon(Icons.person, color: Color(0xFF0D47A1)),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              article.author ?? 'Unknown Author',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              article.publishedAt?.substring(0, 10) ?? 'Unknown Date',
+                              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Divider(thickness: 1, color: Color(0xFFEEEEEE)),
+                  ),
+
+                  // Deskripsi (Lead Paragraph)
+                  Text(
+                    article.description ?? '',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      height: 1.6,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF424242),
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Konten Utama
+                  Text(
+                    article.content ?? 'Read the full story on the original website.',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      height: 1.8,
+                      color: Color(0xFF616161),
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      // Floating Action Button untuk Share (Opsional)
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {}, // Tambahkan fungsi share nanti
+        backgroundColor: const Color(0xFF0D47A1),
+        child: const Icon(Icons.share, color: Colors.white),
       ),
     );
   }

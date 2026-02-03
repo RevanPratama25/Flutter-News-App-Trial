@@ -19,7 +19,7 @@ class Article {
     this.content,
   });
 
-  // 3. Factory method: "Penerjemah" dari JSON ke Objek Article
+  // 3. Factory method: Mengolah data dari JSON ke Objek Article
   factory Article.fromJson(Map<String, dynamic> json) {
     return Article(
       author: json['author'],

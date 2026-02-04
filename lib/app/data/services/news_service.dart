@@ -1,41 +1,52 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
 import '../models/article_model.dart';
 import '../constant.dart';
 
-class NewsService {
-  // Fungsi khusus untuk request ke internet
+class NewsService extends GetConnect {
+  
+  // 1. Setup Base URL di onInit (Good Architecture)
+  // Ini membuat kita tidak perlu mengetik base URL berulang kali
+  @override
+  void onInit() {
+    httpClient.baseUrl = ApiConstant.baseUrl;
+    
+    // Optional: Setup timeout
+    httpClient.timeout = const Duration(seconds: 10);
+  }
+
   Future<List<Article>> fetchArticles() async {
     try {
-      // Menggunakan Constant agar rapi
-      var url = Uri.parse(
-        '${ApiConstant.baseUrl}${ApiConstant.everythingEndpoint}?domains=wsj.com&apiKey=${ApiConstant.apiKey}',
+      // 2. Menggunakan Query Parameters (Map)
+      // Ini jauh lebih rapi daripada menempel string manual (?apiKey=...)
+      final response = await get(
+        ApiConstant.everythingEndpoint,
+        query: {
+          'domains': 'wsj.com',
+          'apiKey': ApiConstant.apiKey,
+        },
       );
 
-      print("Fetching data from: $url");
-      
-      var response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        var jsonData = json.decode(response.body);
-
-        if (jsonData['status'] == 'ok') {
-          var articlesJson = jsonData['articles'] as List;
-          // Parsing JSON ke List<Article> langsung di sini
+      // 3. Cek Error menggunakan status.hasError
+      if (response.status.hasError) {
+        print("Error Status: ${response.statusText}");
+        return Future.error(response.statusText ?? "Terjadi kesalahan server");
+      } else {
+        // 4. Parsing Data
+        // response.body di GetConnect SUDAH berbentuk JSON (Map/List)
+        // Tidak perlu json.decode() lagi!
+        final data = response.body;
+        
+        if (data['status'] == 'ok') {
+          var articlesJson = data['articles'] as List;
           return articlesJson.map((article) => Article.fromJson(article)).toList();
         } else {
-          // Bisa throw error atau return list kosong tergantung kebutuhan
           return [];
         }
-      } else {
-        print("Gagal mengambil data: ${response.body}");
-        return []; // Return kosong jika gagal
       }
     } catch (e) {
       print("Terjadi Error pada Service: $e");
-      rethrow; // Lempar error agar bisa ditangkap di Controller
+      rethrow; 
     }
   }
 }
-
-

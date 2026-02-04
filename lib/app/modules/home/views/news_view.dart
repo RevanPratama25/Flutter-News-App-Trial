@@ -22,7 +22,7 @@ class _NewsViewState extends State<NewsView> {
       backgroundColor: const Color(0xFFF0F4F8),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: const Color(0xFF0D47A1),
+        backgroundColor: const Color.fromARGB(255, 31, 93, 184),
         // ... (Kode AppBar Search sama seperti sebelumnya) ...
         title: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
@@ -57,7 +57,7 @@ class _NewsViewState extends State<NewsView> {
                   ),
                 )
               : const Text(
-                  'TECH PULSE',
+                  'News',
                   key: ValueKey('title'),
                   style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1.2),
                 ),

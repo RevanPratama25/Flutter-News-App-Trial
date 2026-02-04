@@ -1,7 +1,7 @@
 // ignore_for_file: unnecessary_underscores
 
 import 'package:flutter/material.dart';
-import '../models/article_model.dart';
+import '../../../data/models/article_model.dart';
 
 class ArticleDetailView extends StatelessWidget {
   final Article article;

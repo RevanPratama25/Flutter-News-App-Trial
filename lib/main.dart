@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'views/news_view.dart'; // Pastikan path ini benar
+import 'app/modules/home/views/news_view.dart'; // Pastikan path ini benar
 
 void main() {
   runApp(const MyApp());

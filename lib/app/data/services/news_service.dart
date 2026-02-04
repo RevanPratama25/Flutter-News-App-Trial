@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../../models/article_model.dart';
+import '../models/article_model.dart';
 import '../constant.dart';
 
 class NewsService {

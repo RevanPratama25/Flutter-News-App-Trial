@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:get/get.dart';
-import '../models/article_model.dart';
-import '../app/data/services/news_service.dart'; // Import service 
+import '../../../data/models/article_model.dart';
+import '../../../data/services/news_service.dart'; // Import service 
 
 class NewsController extends GetxController {
   // 1. Inisialisasi Service

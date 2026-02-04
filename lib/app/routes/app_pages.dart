@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 
 import '../modules/dashboard/bindings/dashboard_binding.dart';
 import '../modules/dashboard/views/dashboard_view.dart';
-import '../modules/home/bindings/home_binding.dart';
+import '../modules/home/bindings/news_binding.dart';
 import '../modules/home/views/home_view.dart';
 
 part 'app_routes.dart';
@@ -16,7 +16,7 @@ class AppPages {
     GetPage(
       name: _Paths.HOME,
       page: () => const HomeView(),
-      binding: HomeBinding(),
+      binding: NewsBinding(),
     ),
     GetPage(
       name: _Paths.DASHBOARD,

@@ -5,8 +5,8 @@ import '../../../data/services/news_service.dart'; // Import service
 
 class NewsController extends GetxController {
   // 1. Inisialisasi Service
-  final NewsService _newsService = NewsService();
-
+  final NewsService _newsService = Get.put(NewsService());
+  
   var articles = <Article>[].obs; // Gunakan tipe data spesifik <Article>
   var isLoading = true.obs;
   
